@@ -1,6 +1,8 @@
 import tkinter as tk
 from tkinter import filedialog
 
+from process_files import process_files
+
 
 def main():
     window = tk.Tk()
@@ -106,8 +108,8 @@ class App:
         self.error_label.config(text="")
 
         if self.sims_file_path and self.meters_file_path:
-            print("Sims file:", self.sims_file_path)
-            print("Meters file:", self.meters_file_path)
+            import_data = process_files(self.sims_file_path, self.meters_file_path)
+            print(import_data)
         else:
             self.error_label.config(
                 text="Выберите оба файла!", font=("Arial", 18), fg="red"
