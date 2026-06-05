@@ -19,6 +19,7 @@ class ImportData(TypedDict):
     address: str
     consumer_name: str
     device_type: str
+    tp_number: str
 
 
 def process_files(sims_file: str, meters_file: str) -> list[ImportData]:
@@ -32,13 +33,16 @@ def process_files(sims_file: str, meters_file: str) -> list[ImportData]:
     )
 
     region_address = "Краснодарский край, Тимашевский р-н, г Тимашевск"
-    pattern = r"^ТП-\d+[А-Яа-я]?"
+    pattern = r"^(ТП-\d+[А-Яа-я]?)"
 
     df_sims = df_sims.with_columns(
-        pl.col("Адрес")
-        .str.replace_all(".", "", literal=True)
-        .map_elements(add_house_prefix)
-        .str.replace(pattern, region_address)
+        [
+            pl.col("Адрес").str.extract(pattern, 1).alias("tp_number"),
+            pl.col("Адрес")
+            .str.replace_all(".", "", literal=True)
+            .map_elements(add_house_prefix)
+            .str.replace(pattern, region_address),
+        ]
     )
 
     return (
@@ -50,6 +54,7 @@ def process_files(sims_file: str, meters_file: str) -> list[ImportData]:
                     "Адрес",
                     "Наименование точки учета",
                     "Тип устройства",
+                    "tp_number",
                 ]
             )
         )

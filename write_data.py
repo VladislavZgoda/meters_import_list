@@ -11,6 +11,7 @@ dynamic_columns_ty = {
     "consumer_code": "AX",
     "serial_number": "AE",
     "address": "AB",
+    "tp_number": "T",
 }
 
 static_columns_ty = {
