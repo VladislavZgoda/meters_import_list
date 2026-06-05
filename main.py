@@ -1,3 +1,4 @@
+import traceback
 import tkinter as tk
 from tkinter import filedialog
 
@@ -108,7 +109,13 @@ class App:
     def create_import_list(self):
         self.status_label.config(text="")
 
-        if self.sims_file_path and self.meters_file_path:
+        if not self.sims_file_path or not self.meters_file_path:
+            self.status_label.config(
+                text="Выберите оба файла!", font=("Arial", 18), fg="red"
+            )
+            return
+
+        try:
             import_data = process_files(self.sims_file_path, self.meters_file_path)
 
             save_path = filedialog.asksaveasfilename(
@@ -117,16 +124,16 @@ class App:
                 title="Сохранить файл как",
             )
 
-            if save_path:
-                wb_import_list = fill_in_import_list(import_data)
-                wb_import_list.save(save_path)
-                self.status_label.config(text="Файл успешно сохранён!", fg="green")
-            else:
+            if not save_path:
                 self.status_label.config(text="Сохранение отменено", fg="orange")
-        else:
-            self.status_label.config(
-                text="Выберите оба файла!", font=("Arial", 18), fg="red"
-            )
+                return
+
+            wb_import_list = fill_in_import_list(import_data)
+            wb_import_list.save(save_path)
+            self.status_label.config(text="Файл успешно сохранён!", fg="green")
+        except Exception as e:
+            self.status_label.config(text=f"Ошибка: {e}", fg="red", wraplength=500)
+            traceback.print_exc()
 
 
 if __name__ == "__main__":
