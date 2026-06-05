@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import filedialog
 
 from process_files import process_files
+from write_data import fill_in_import_list
 
 
 def main():
@@ -109,7 +110,7 @@ class App:
 
         if self.sims_file_path and self.meters_file_path:
             import_data = process_files(self.sims_file_path, self.meters_file_path)
-            print(import_data)
+            fill_in_import_list(import_data)
         else:
             self.error_label.config(
                 text="Выберите оба файла!", font=("Arial", 18), fg="red"
