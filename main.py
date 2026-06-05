@@ -80,8 +80,8 @@ class App:
             command=self.select_meters_file,
         ).grid(row=1, column=2, padx=5)
 
-        self.error_label = tk.Label(window, text="")
-        self.error_label.grid(row=3, column=0, columnspan=3, pady=10)
+        self.status_label = tk.Label(window, text="")
+        self.status_label.grid(row=3, column=0, columnspan=3, pady=10)
 
         tk.Button(
             window,
@@ -106,13 +106,25 @@ class App:
             self.meters_label.config(text=path, fg="green")
 
     def create_import_list(self):
-        self.error_label.config(text="")
+        self.status_label.config(text="")
 
         if self.sims_file_path and self.meters_file_path:
             import_data = process_files(self.sims_file_path, self.meters_file_path)
-            fill_in_import_list(import_data)
+
+            save_path = filedialog.asksaveasfilename(
+                defaultextension=".xlsx",
+                filetypes=[("Excel files", "*.xlsx")],
+                title="Сохранить файл как",
+            )
+
+            if save_path:
+                wb_import_list = fill_in_import_list(import_data)
+                wb_import_list.save(save_path)
+                self.status_label.config(text="Файл успешно сохранён!", fg="green")
+            else:
+                self.status_label.config(text="Сохранение отменено", fg="orange")
         else:
-            self.error_label.config(
+            self.status_label.config(
                 text="Выберите оба файла!", font=("Arial", 18), fg="red"
             )
 

@@ -2,7 +2,7 @@ import re
 from pathlib import Path
 from typing import TypedDict
 
-from openpyxl import load_workbook
+from openpyxl import load_workbook, Workbook
 from openpyxl.utils import column_index_from_string
 
 from process_files import ImportData
@@ -28,7 +28,7 @@ static_columns_ty = {
 }
 
 
-def fill_in_import_list(import_data: list[ImportData]) -> None:
+def fill_in_import_list(import_data: list[ImportData]) -> Workbook:
     script_dir = Path(__file__).resolve().parent
     import_list_path = script_dir / "template" / "import_list.xlsx"
 
@@ -127,8 +127,7 @@ def fill_in_import_list(import_data: list[ImportData]) -> None:
             )
             ws_row += 1
             row_num += 1
-
-    wb.save("test.xlsx")
+    return wb
 
 
 def select_device_type(type: str) -> str:
