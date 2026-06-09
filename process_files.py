@@ -37,6 +37,7 @@ def process_files(sims_file: str, meters_file: str) -> list[ImportData]:
 
     df_sims = df_sims.with_columns(
         [
+            pl.col("Код потребителя").str.extract(r"(\d{12})", 1),
             pl.col("Адрес").str.extract(pattern, 1).alias("tp_number"),
             pl.col("Адрес")
             .str.replace_all(".", "", literal=True)
