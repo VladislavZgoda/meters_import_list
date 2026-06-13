@@ -26,7 +26,7 @@ def process_files(sims_file: str, meters_file: str) -> list[ImportData]:
     df_sims = pl.read_excel(sims_file, read_options={"header_row": 1}).slice(0, -1)
     df_meters = pl.read_excel(meters_file, read_options={"header_row": None})
 
-    serial_numbers = df_meters.select(pl.col("column_1")).to_series()
+    serial_numbers = df_meters.select(pl.col("column_1").str.to_integer()).to_series()
 
     df_sims = df_sims.with_columns(pl.col("Серийный №").str.to_integer()).filter(
         pl.col("Серийный №").is_in(serial_numbers)
