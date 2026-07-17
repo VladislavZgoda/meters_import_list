@@ -107,9 +107,14 @@ def fill_in_import_list(import_data: list[ImportData]) -> Workbook:
 
     ws_row = 3
     row_num = 1
+    already_processed_codes: list[str] = []
 
     for record in import_data:
-        if not record["consumer_code"].startswith("230700"):
+        consumer_code = record["consumer_code"]
+        if (
+            not consumer_code.startswith("230700")
+            and consumer_code not in already_processed_codes
+        ):
             ws_ul.cell(
                 row=ws_row,
                 column=column_index_from_string("A"),
@@ -123,10 +128,11 @@ def fill_in_import_list(import_data: list[ImportData]) -> Workbook:
             ws_ul.cell(
                 row=ws_row,
                 column=column_index_from_string("F"),
-                value=record["consumer_code"],
+                value=consumer_code,
             )
             ws_row += 1
             row_num += 1
+            already_processed_codes.append(consumer_code)
     return wb
 
 
