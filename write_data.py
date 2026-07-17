@@ -102,8 +102,8 @@ def fill_in_import_list(import_data: list[ImportData]) -> Workbook:
                     column=column_index_from_string("D"),
                     value=parsed_name["patronymic"],
                 )
-        ws_row += 1
-        row_num += 1
+            ws_row += 1
+            row_num += 1
 
     ws_row = 3
     row_num = 1
