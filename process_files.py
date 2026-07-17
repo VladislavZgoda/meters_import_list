@@ -1,3 +1,4 @@
+import re
 from typing import TypedDict
 
 import polars as pl
@@ -46,7 +47,7 @@ def process_files(sims_file: str, meters_file: str) -> list[ImportData]:
         ]
     )
 
-    return (
+    data = (
         df_sims.select(
             pl.col(
                 [
@@ -70,6 +71,11 @@ def process_files(sims_file: str, meters_file: str) -> list[ImportData]:
         )
         .to_dicts()
     )
+
+    sorted_data: list[ImportData] = sorted(
+        data, key=lambda x: extract_number(x["tp_number"])
+    )
+    return sorted_data
 
 
 def add_house_prefix(address: str) -> str:
@@ -99,3 +105,8 @@ def add_house_prefix(address: str) -> str:
         return address + ", д Строение"
 
     return address
+
+
+def extract_number(tp_number: str) -> int:
+    match = re.search(r"\d+", tp_number)
+    return int(match.group())
