@@ -151,8 +151,8 @@ class SurnameWithInitials(TypedDict):
 
 def parse_consumer_name(name: str) -> SurnameWithInitials | None:
     # Фамилия (не пробельные символы), пробел, инициал (одна буква + возможно точка),
-    # пробел, инициал (одна буква + возможно точка)
-    match = re.match(r"^(\S+)\s+(\S)\.?\s+(\S)\.?$", name.strip())
+    # пробел (0 или больше), инициал (возможно одна буква + возможно точка)
+    match = re.match(r"^(\S+)\s+(\S)\.?\s*(\S)?\.?$", name.strip())
 
     if not match:
         return None
@@ -160,5 +160,5 @@ def parse_consumer_name(name: str) -> SurnameWithInitials | None:
     return {
         "surname": match.group(1),
         "name": match.group(2) + ".",
-        "patronymic": match.group(3) + ".",
+        "patronymic": (match.group(3) + ".") if match.group(3) else "",
     }
