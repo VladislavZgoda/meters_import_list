@@ -118,7 +118,7 @@ def fill_in_import_list(import_data: list[ImportData]) -> Workbook:
             ws_ul.cell(
                 row=ws_row,
                 column=column_index_from_string("B"),
-                value=row_num,
+                value=record["consumer_name"],
             )
             ws_ul.cell(
                 row=ws_row,
