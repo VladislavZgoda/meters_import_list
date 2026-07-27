@@ -1,7 +1,7 @@
 import os
 import traceback
 import tkinter as tk
-from tkinter import filedialog
+from tkinter import ttk, filedialog
 
 from process_files import process_files
 from write_data import fill_in_import_list
@@ -22,11 +22,12 @@ class App:
         self.sims_file_path = ""
         self.meters_file_path = ""
 
-        tk.Label(
+        self._setup_styles()
+
+        ttk.Label(
             window,
             text="Экспорт из Sims:",
-            font=("Arial", 18),
-            fg="blue",
+            style="Title.TLabel",
         ).grid(
             row=0,
             column=0,
@@ -35,11 +36,10 @@ class App:
             sticky="e",
         )
 
-        self.sims_label = tk.Label(
+        self.sims_label = ttk.Label(
             window,
             text="Файл не выбран",
-            font=("Arial", 12),
-            fg="red",
+            style="NotSelected.TLabel",
             width=40,
             anchor="w",
             relief="sunken",
@@ -47,26 +47,24 @@ class App:
 
         self.sims_label.grid(row=0, column=1, padx=5)
 
-        tk.Button(
+        ttk.Button(
             window,
             text="Просмотреть...",
-            font=("Arial", 12),
-            border=1.5,
+            style="Normal.TButton",
             command=self.select_sims_file,
         ).grid(row=0, column=2, padx=5)
 
-        tk.Label(
+        ttk.Label(
             window,
             text="Список ПУ:",
             font=("Arial", 18),
-            fg="blue",
+            style="Title.TLabel",
         ).grid(row=1, column=0, padx=5, pady=5, sticky="e")
 
-        self.meters_label = tk.Label(
+        self.meters_label = ttk.Label(
             window,
             text="Файл не выбран",
-            font=("Arial", 12),
-            fg="red",
+            style="NotSelected.TLabel",
             width=40,
             anchor="w",
             relief="sunken",
@@ -74,22 +72,20 @@ class App:
 
         self.meters_label.grid(row=1, column=1, padx=5)
 
-        tk.Button(
+        ttk.Button(
             window,
             text="Просмотреть...",
-            font=("Arial", 12),
-            border=1.5,
+            style="Normal.TButton",
             command=self.select_meters_file,
         ).grid(row=1, column=2, padx=5)
 
-        self.status_label = tk.Label(window, text="", font=("Arial", 14))
+        self.status_label = ttk.Label(window, text="", style="Status.TLabel")
         self.status_label.grid(row=3, column=0, columnspan=3, pady=10)
 
-        tk.Button(
+        ttk.Button(
             window,
             text="Сформировать ОП",
-            font=("Arial", 14),
-            border=3,
+            style="Submit.TButton",
             command=self.create_import_list,
         ).grid(row=2, column=1, pady=10)
 
@@ -101,7 +97,7 @@ class App:
 
         if path:
             self.sims_file_path = path
-            self.sims_label.config(text=os.path.basename(path), fg="green")
+            self.sims_label.config(text=os.path.basename(path), foreground="green")
 
     def select_meters_file(self):
         path = filedialog.askopenfilename(
@@ -111,13 +107,13 @@ class App:
 
         if path:
             self.meters_file_path = path
-            self.meters_label.config(text=os.path.basename(path), fg="green")
+            self.meters_label.config(text=os.path.basename(path), foreground="green")
 
     def create_import_list(self):
         self.status_label.config(text="")
 
         if not self.sims_file_path or not self.meters_file_path:
-            self.status_label.config(text="Выберите оба файла!", fg="red")
+            self.status_label.config(text="Выберите оба файла!", foreground="red")
             return
 
         try:
@@ -130,15 +126,29 @@ class App:
             )
 
             if not save_path:
-                self.status_label.config(text="Сохранение отменено", fg="orange")
+                self.status_label.config(
+                    text="Сохранение отменено", foreground="orange"
+                )
                 return
 
             wb_import_list = fill_in_import_list(import_data)
             wb_import_list.save(save_path)
-            self.status_label.config(text="Файл успешно сохранён!", fg="green")
+            self.status_label.config(text="Файл успешно сохранён!", foreground="green")
         except Exception as e:
-            self.status_label.config(text=f"Ошибка: {e}", fg="red", wraplength=500)
+            self.status_label.config(
+                text=f"Ошибка: {e}", foreground="red", wraplength=500
+            )
             traceback.print_exc()
+
+    def _setup_styles(self):
+        style = ttk.Style()
+
+        style.configure("Title.TLabel", font=("Arial", 18), foreground="blue")
+        style.configure("NotSelected.TLabel", font=("Arial", 12), foreground="red")
+        style.configure("Status.TLabel", font=("Arial", 14))
+
+        style.configure("Normal.TButton", font=("Arial", 12))
+        style.configure("Submit.TButton", font=("Arial", 14))
 
 
 if __name__ == "__main__":
