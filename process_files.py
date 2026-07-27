@@ -73,7 +73,7 @@ def process_files(sims_file: str, meters_file: str) -> list[ImportData]:
     )
 
     sorted_data: list[ImportData] = sorted(
-        data, key=lambda x: extract_number(x["tp_number"])
+        data, key=lambda x: (extract_number(x["tp_number"]), x["consumer_code"] or "")
     )
     return sorted_data
 
