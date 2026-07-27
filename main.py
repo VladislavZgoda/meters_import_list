@@ -82,7 +82,7 @@ class App:
             command=self.select_meters_file,
         ).grid(row=1, column=2, padx=5)
 
-        self.status_label = tk.Label(window, text="")
+        self.status_label = tk.Label(window, text="", font=("Arial", 14))
         self.status_label.grid(row=3, column=0, columnspan=3, pady=10)
 
         tk.Button(
@@ -117,9 +117,7 @@ class App:
         self.status_label.config(text="")
 
         if not self.sims_file_path or not self.meters_file_path:
-            self.status_label.config(
-                text="Выберите оба файла!", font=("Arial", 18), fg="red"
-            )
+            self.status_label.config(text="Выберите оба файла!", fg="red")
             return
 
         try:
