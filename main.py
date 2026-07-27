@@ -1,3 +1,4 @@
+import os
 import traceback
 import tkinter as tk
 from tkinter import filedialog
@@ -93,18 +94,24 @@ class App:
         ).grid(row=2, column=1, pady=10)
 
     def select_sims_file(self):
-        path = filedialog.askopenfilename(title="Выбрать экспорт из Sims")
+        path = filedialog.askopenfilename(
+            title="Выбрать экспорт из Sims",
+            filetypes=[("Excel files", "*.xlsx")],
+        )
 
         if path:
             self.sims_file_path = path
-            self.sims_label.config(text=path, fg="green")
+            self.sims_label.config(text=os.path.basename(path), fg="green")
 
     def select_meters_file(self):
-        path = filedialog.askopenfilename(title="Выбрать список ПУ")
+        path = filedialog.askopenfilename(
+            title="Выбрать список ПУ",
+            filetypes=[("Excel files", "*.xlsx")],
+        )
 
         if path:
             self.meters_file_path = path
-            self.meters_label.config(text=path, fg="green")
+            self.meters_label.config(text=os.path.basename(path), fg="green")
 
     def create_import_list(self):
         self.status_label.config(text="")
