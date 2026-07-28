@@ -143,8 +143,12 @@ class App:
     def _setup_styles(self):
         style = ttk.Style()
 
+        style.theme_use("clam")
+
         style.configure("Title.TLabel", font=("Arial", 18), foreground="blue")
-        style.configure("NotSelected.TLabel", font=("Arial", 12), foreground="red")
+        style.configure(
+            "NotSelected.TLabel", font=("Arial", 12), padding=5, foreground="red"
+        )
         style.configure("Status.TLabel", font=("Arial", 14))
 
         style.configure("Normal.TButton", font=("Arial", 12))
